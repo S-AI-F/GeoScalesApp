@@ -54,7 +54,7 @@ navbar = dbc.NavbarSimple(
 
 
 scale_selection_text = html.P(
-    'Select Scale:',
+    'Select Jiji:',
     style={
         'font-size': '120%',
         'margin-bottom': '15px',
