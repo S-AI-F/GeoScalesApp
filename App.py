@@ -156,5 +156,7 @@ def update_map_kpi(scale, kpi):
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
     return fig
 
+if __name__ == '__main__':
+    app.run_server()
 
-app.run_server(debug=True, use_reloader=False)
+# app.run_server(debug=True, use_reloader=False)
