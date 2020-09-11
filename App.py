@@ -157,4 +157,4 @@ def update_map_kpi(scale, kpi):
     return fig
 
 
-app.run_server(debug=False, use_reloader=False)
+app.run_server(debug=True, use_reloader=False)
