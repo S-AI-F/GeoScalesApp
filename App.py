@@ -25,7 +25,16 @@ import plotly.express as px
 import dash_bootstrap_components as dbc
 
 # css style
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
+# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+# app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+# app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
+
+app = dash.Dash(
+    __name__,
+    external_stylesheets=[dbc.themes.SPACELAB],
+    meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
+)
+
 app.title = "OpenGeoKPI"
 server = app.server
 
@@ -54,7 +63,7 @@ navbar = dbc.NavbarSimple(
 
 
 scale_selection_text = html.P(
-    'Select Jiji:',
+    'Select scale:',
     style={
         'font-size': '120%',
         'margin-bottom': '15px',
