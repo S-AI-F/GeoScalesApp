@@ -2,7 +2,7 @@
 # load census data
 
 import pandas as pd
-census_data_all = pd.read_csv("assets/census_data_all.csv")
+census_data_all = pd.read_csv("assets/communes_regions_census_2017.csv")
 
 census_data_all['PopTotalv2'] = 2 * census_data_all['PopulationTotal']
 
@@ -12,10 +12,13 @@ census_data_all['PopTotalv2'] = 2 * census_data_all['PopulationTotal']
 
 import json
 
-with open("assets/geo_zones.json") as f:
+# load geojson data from local file
+with open("assets/geo_regions_municipalities.json") as f:
     geo_zones = json.load(f)
 
-
+# load geojson data from url
+# content = requests.get("https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions-version-simplifiee.geojson")
+# geo_zones = json.loads(content.content)
 
 import dash
 import dash_core_components as dcc
@@ -25,13 +28,11 @@ import plotly.express as px
 import dash_bootstrap_components as dbc
 
 # css style
-# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-# app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-# app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
 app = dash.Dash(
     __name__,
     external_stylesheets=[dbc.themes.SPACELAB],
+    # specify meta_tags in order to make the app responsive to width-device
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
 )
 
@@ -107,7 +108,8 @@ dropdown_kpi = dcc.Dropdown(
     # value='PopulationTotal',
     style={
         'width': '90%',
-        'margin-left': '2%'
+        'margin-left': '2%',
+        'margin-bottom': '15px',
     }
 )
 

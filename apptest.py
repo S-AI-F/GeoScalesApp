@@ -1,63 +1,27 @@
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
-import plotly.graph_objs as go
+import pandas as pd
+import plotly.express as px
+import json
 
-########### Define your variables
-beers=['Chesapeake Stout', 'Snake Dog IPA', 'Imperial Porter', 'Double Dog IPA']
-ibu_values=[35, 60, 85, 75]
-abv_values=[5.4, 7.1, 9.2, 4.3]
-color1='lightblue'
-color2='darkgreen'
-mytitle='Beer Comparison'
-tabtitle='beer!'
-myheading='Flying Dog Beers'
-label1='IBU'
-label2='ABV'
-githublink='https://github.com/austinlasseter/flying-dog-beers'
-sourceurl='https://www.flyingdog.com/beers/'
+# load census data
+census_data_all = pd.read_csv("assets/communes_regions_census_2017.csv")
+census_data_all['PopTotalv2'] = 2 * census_data_all['PopulationTotal']
 
-########### Set up the chart
-bitterness = go.Bar(
-    x=beers,
-    y=ibu_values,
-    name=label1,
-    marker={'color':color1}
-)
-alcohol = go.Bar(
-    x=beers,
-    y=abv_values,
-    name=label2,
-    marker={'color':color2}
-)
+# load geojson data from local file
+with open("assets/geo_regions_municipalities.json") as f:
+    geo_zones = json.load(f)
 
-beer_data = [bitterness, alcohol]
-beer_layout = go.Layout(
-    barmode='group',
-    title = mytitle
-)
+# filter data
+scale = 'Region'
+kpi = 'PopulationTotal'
 
-beer_fig = go.Figure(data=beer_data, layout=beer_layout)
+data = census_data_all[census_data_all['Level'] == scale]
+fig = px.choropleth_mapbox(data,
+                           geojson=geo_zones,
+                           color=kpi,
+                           locations="Code", featureidkey="properties.Code",
+                           center={"lat": 48.8534, "lon": 2.3488},
+                           mapbox_style="carto-positron", zoom=7, height=600)
+fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
 
-########### Initiate the app
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-server = app.server
-app.title=tabtitle
-
-########### Set up the layout
-app.layout = html.Div(children=[
-    html.H1(myheading),
-    dcc.Graph(
-        id='flyingdog',
-        figure=beer_fig
-    ),
-    html.A('Code on Github', href=githublink),
-    html.Br(),
-    html.A('Data Source', href=sourceurl),
-    ]
-)
-
-if __name__ == '__main__':
-    app.run_server()
+fig.show()
